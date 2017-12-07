@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:rdb="http://www.dangdang.com/schema/ddframe/rdb"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                        http://www.springframework.org/schema/beans/spring-beans.xsd
+                        http://www.springframework.org/schema/tx
+                        http://www.springframework.org/schema/tx/spring-tx.xsd
+                        http://www.springframework.org/schema/context
+                        http://www.springframework.org/schema/context/spring-context.xsd
+                        http://www.dangdang.com/schema/ddframe/rdb
+                        http://www.dangdang.com/schema/ddframe/rdb/rdb.xsd">
+    <rdb:strategy id="databaseShardingStrategy" sharding-columns="getTime"
+                  algorithm-class="com.tg.algorithm.SingleKeyModuloDatabaseShardingAlgorithm"/>
+    <rdb:strategy id="tableShardingStrategy" sharding-columns="getTime"
+                  algorithm-class="com.tg.algorithm.SingleKeyModuloTableShardingAlgorithm"/>
+
+    <bean id="dsm2017" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+        <property name="driverClassName" value="${dsm2017.db.driver}" />
+        <property name="url" value="${dsm2017.db.jdbc.url}" />
+        <property name="username" value="${dsm2017.db.username}"/>
+        <property name="password" value="${dsm2017.db.password}" />
+        <property name="filters"  value="${dsm2017.db.filters}"></property>
+        <property name="maxActive" value="${dsm2017.db.pool.maxActive}"></property>
+        <property name="initialSize" value="${dsm2017.db.pool.initialSize}"></property>
+        <property name="minIdle" value="${dsm2017.db.pool.minIdle}"></property>
+        <property name="maxWait" value="${dsm2017.db.pool.maxWait}"></property>
+        <property name="validationQuery" value="${dsm2017.db.validationQuery}"></property>
+        <property name="testWhileIdle" value="${dsm2017.db.testWhileIdle}"></property>
+        <property name="poolPreparedStatements" value="${dsm2017.db.poolPreparedStatements}"></property>
+        <property name="maxOpenPreparedStatements" value="${dsm2017.db.maxOpenPreparedStatements}"></property>
+    </bean>
+
+    <rdb:data-source id="shardingDataSource">
+        <rdb:sharding-rule data-sources="dsm2017">
+            <rdb:table-rules>
+                <rdb:table-rule logic-table="t_online_data_power" actual-tables="t_online_data_power_0${1..9},t_online_data_power_${10..12}"
+                                database-strategy="databaseShardingStrategy" table-strategy="tableShardingStrategy"/>
+                <rdb:table-rule logic-table="t_online_data_qty" actual-tables="t_online_data_qty_0${1..9},t_online_data_qty_${10..12}"
+                                database-strategy="databaseShardingStrategy" table-strategy="tableShardingStrategy"/>
+                <rdb:table-rule logic-table="t_online_data_energy" actual-tables="t_online_data_energy_0${1..9},t_online_data_energy_${10..12} "
+                                database-strategy="databaseShardingStrategy" table-strategy="tableShardingStrategy"/>
+                <rdb:table-rule logic-table="t_online_data_harmonic_u" actual-tables="t_online_data_harmonic_u_0${1..9},t_online_data_harmonic_u_${10..12}"
+                                database-strategy="databaseShardingStrategy" table-strategy="tableShardingStrategy"/>
+                <rdb:table-rule logic-table="t_online_data_harmonic_i" actual-tables="t_online_data_harmonic_i_0${1..9},t_online_data_harmonic_i_${10..12}"
+                                database-strategy="databaseShardingStrategy" table-strategy="tableShardingStrategy"/>
+            </rdb:table-rules>
+        </rdb:sharding-rule>
+    </rdb:data-source>
+
+    <!-- <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="shardingDataSource" />
+    </bean>
+    <tx:annotation-driven transaction-manager="transactionManager" />-->
+</beans>

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans 
+                        http://www.springframework.org/schema/beans/spring-beans.xsd 
+                        ">
+    <!-- 第一种方式：加载一个properties文件 -->
+    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="location" value="classpath:jdbc.properties"/>
+        <property name="ignoreUnresolvablePlaceholders" value="true" />
+    </bean>
+	
+	<!-- 不切片 -->
+	 <bean id="dsmDataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">   
+      <property name="driverClassName" value="${dsm.db.driver}" />  
+       <property name="url" value="${dsm.db.jdbc.url}" />   
+      <property name="username" value="${dsm.db.username}"/>
+      <property name="password" value="${dsm.db.password}" />  
+      <property name="filters"  value="${dsm.db.filters}"></property>  
+      <property name="maxActive" value="${dsm.db.pool.maxActive}"></property>  
+      <property name="initialSize" value="${dsm.db.pool.initialSize}"></property>  
+      <property name="minIdle" value="${dsm.db.pool.minIdle}"></property>  
+      <property name="maxWait" value="${dsm.db.pool.maxWait}"></property>      
+      <property name="validationQuery" value="${dsm.db.validationQuery}"></property>  
+      <property name="testWhileIdle" value="${dsm.db.testWhileIdle}"></property>  
+      <property name="poolPreparedStatements" value="${dsm.db.poolPreparedStatements}"></property>  
+      <property name="maxOpenPreparedStatements" value="${dsm.db.maxOpenPreparedStatements}"></property>  
+  </bean>
+
+    <bean id="dsmsysbase" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+        <property name="driverClassName" value="${dsmsysbase.db.driver}" />
+        <property name="url" value="${dsmsysbase.db.jdbc.url}" />
+        <property name="username" value="${dsmsysbase.db.username}"/>
+        <property name="password" value="${dsmsysbase.db.password}" />
+        <property name="filters"  value="${dsmsysbase.db.filters}"></property>
+        <property name="maxActive" value="${dsmsysbase.db.pool.maxActive}"></property>
+        <property name="initialSize" value="${dsmsysbase.db.pool.initialSize}"></property>
+        <property name="minIdle" value="${dsmsysbase.db.pool.minIdle}"></property>
+        <property name="maxIdle" value="${dsmsysbase.db.pool.maxIdle}"></property>
+        <property name="maxWait" value="${dsmsysbase.db.pool.maxWait}"></property>
+        <property name="validationQuery" value="${dsmsysbase.db.validationQuery}"></property>
+        <property name="testWhileIdle" value="${dsmsysbase.db.testWhileIdle}"></property>
+        <property name="poolPreparedStatements" value="${dsmsysbase.db.poolPreparedStatements}"></property>
+        <property name="maxOpenPreparedStatements" value="${dsmsysbase.db.maxOpenPreparedStatements}"></property>
+    </bean>
+
+    <!-- 动态数据源 -->
+     <bean class="com.tg.util.DynamicDataSource" id="dy_dataSource">  
+	    <property name="targetDataSources">  
+	        <map key-type="java.lang.String">  
+	            <entry value-ref="dsmDataSource" key="anhui_dsm"></entry>
+	            <entry value-ref="dsm2017" key="dsm2017"></entry>
+	            <entry value-ref="shardingDataSource" key="sharding"></entry>  
+				<entry value-ref="dsmsysbase" key="dsm_sysbase"></entry>
+	        </map>  
+	    </property>  
+    	<property name="defaultTargetDataSource" ref="shardingDataSource"></property>
+     </bean>
+  
+    <!-- sharding-jdbc数据源 -->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dy_dataSource"/>
+        <!-- 自动扫描mapping.xml文件 -->
+        <property name="mapperLocations" value="classpath:mapping/*.xml"></property>
+    </bean>
+
+    <!-- DAO接口所在包名，Spring会自动查找其下的类 -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.tg.dao"/>
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
+    </bean>
+    
+	<!-- 涉及跨库，暂时不做事物 -->
+    <!-- (事务管理)transaction manager, use JtaTransactionManager for global tx 
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    (事务管理)transaction manager, use JtaTransactionManager for global tx 
+    <tx:annotation-driven transaction-manager="transactionManager"/>-->
+</beans>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tg.dao.TMonitorDao" >
+	<resultMap id="tMonitorCacheMap" type="com.tg.model.TMonitorCacheEntry">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <id column="terminalId" property="terminalId" jdbcType="VARCHAR"/>
+        <id column="companyId" property="companyId" jdbcType="BIGINT"/>
+    </resultMap>
+    <resultMap id="map" type="com.tg.model.TMonitor">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="companyId" property="companyId" jdbcType="BIGINT"/>
+        <result column="parentId" property="parentId" jdbcType="BIGINT"/>
+        <result column="customizeNo" property="customizeNo" jdbcType="VARCHAR"/>
+        <result column="wiringWay" property="wiringWay" jdbcType="INTEGER" />
+        <result column="seeType" property="seeType" jdbcType="INTEGER" />
+        <result column="monitorObj" property="monitorObj" jdbcType="INTEGER" />
+        <result column="ct" property="ct" jdbcType="DOUBLE"/>
+        <result column="useCt" property="useCt" jdbcType="INTEGER" />
+        <result column="pt" property="pt" jdbcType="DOUBLE"/>
+        <result column="usePt" property="usePt" jdbcType="INTEGER" />
+        <result column="pe" property="pe" jdbcType="INTEGER" />
+        <result column="ue" property="ue" jdbcType="INTEGER" />
+        <result column="terminalId" property="terminalId" jdbcType="VARCHAR"/>
+        <result column="tid" property="tid" jdbcType="VARCHAR"/>
+        <result column="onlineTime" property="onlineTime" jdbcType="BIGINT" />
+        <result column="online" property="online" jdbcType="INTEGER" />
+        <result column="orderNum" property="orderNum" jdbcType="INTEGER" />
+        <result column="pic" property="pic" jdbcType="VARCHAR"/>
+        <result column="priceType" property="priceType" jdbcType="INTEGER" />
+        <result column="hasMobile" property="hasMobile" jdbcType="INTEGER" />
+        <result column="displayWeb" property="displayWeb" jdbcType="INTEGER" />
+        <result column="description" property="description" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, name, companyId, companyId, parentId, customizeNo, seeType,monitorObj,ct,useCt,pt,usePt,pe,ue,
+        terminalId,tid,onlineTime,online,orderNum,pic,priceType,hasMobile,description
+    </sql>
+
+	<select id="queryTmoitorCache" resultType="com.tg.model.TMonitorCacheEntry">
+	    select id,terminalId,companyId,onlineTime from t_monitor order by companyId asc, id asc
+	</select>
+    <update id="updateTmonitor" parameterType="com.tg.model.TMonitorCacheEntry">
+        update t_monitor set onlineTime =#{onlineTime} WHERE terminalId = #{terminalId} and companyId =#{companyId}
+    </update>
+
+    <select id="queryTMonitor" resultMap="map" parameterType="com.tg.model.TMonitor">
+        SELECT <include refid="Base_Column_List" />
+        from t_monitor
+        <if test="companyId != null">
+            where companyId = #{companyId}
+        </if>
+        <if test="terminalId != null">
+            and terminalId = #{terminalId}
+        </if>
+        <if test="parentId != null">
+           and  parentId = #{parentId}
+        </if>
+
+    </select>
+</mapper>

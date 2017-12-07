@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tg.dao.TKeyDistributeDao" >
+
+    <resultMap id="map" type="com.tg.model.TKeyDistribute">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="appId" property="appId" jdbcType="VARCHAR"/>
+        <result column="appKey" property="appKey" jdbcType="VARCHAR"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+    </resultMap>
+    <select id="queryTKeyDistribute" resultMap="map">
+          SELECT * from t_key_distribute WHERE appid= #{appid}
+    </select>
+</mapper>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tg.dao.TOnlineDataEnergyDao" >
+
+    <resultMap id="tOnlineDataPowerMap" type="com.tg.model.TOnlineDataEnergy">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <id column="terminalId" property="terminalId" jdbcType="VARCHAR"/>
+        <id column="getTime" property="getTime" jdbcType="BIGINT"/>
+        <id column="tpe" property="tpe" jdbcType="DECIMAL"/>
+        <id column="tqe" property="tqe" jdbcType="DECIMAL"/>
+        <id column="fpe" property="fpe" jdbcType="DECIMAL"/>
+        <id column="fqe" property="fqe" jdbcType="DECIMAL"/>
+        <id column="tps" property="tps" jdbcType="DECIMAL"/>
+        <id column="tqs" property="tqs" jdbcType="DECIMAL"/>
+        <id column="fps" property="fps" jdbcType="DECIMAL"/>
+        <id column="fqs" property="fqs" jdbcType="DECIMAL"/>
+    </resultMap>
+
+    <insert id="addTOnlineDataEnergy" parameterType="com.tg.model.TOnlineDataEnergy"
+            useGeneratedKeys="true" keyProperty="id">
+        insert ignore into t_online_data_energy(terminalId,getTime,tpe,tqe,fpe,fqe,tps,tqs,fps,fqs)
+        values(#{terminalId},#{getTime},#{tpe},#{tqe},#{fpe},#{fqe},#{tps},#{tqs},#{fps},#{fqs})
+    </insert>
+
+    <insert id="batchInsert" parameterType="java.util.List" >
+        <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER">
+            select last_insert_id()
+        </selectKey>
+        insert ignore into ${tableName}(terminalId,getTime,tpe,tqe,fpe,fqe,tps,tqs,fps,fqs)
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.terminalId},#{item.getTime},#{item.tpe},#{item.tqe},#{item.fpe},#{item.fqe},#{item.tps},#{item.tqs},#{item.fps},#{item.fqs})
+        </foreach>
+    </insert>
+
+    <select id="queryDataEnergy" resultMap="tOnlineDataPowerMap">
+        select *  from t_online_data_energy p where
+        terminalId = #{terminalId}  and getTime BETWEEN #{beginTime} and #{endTime}
+        order by getTime asc limit 0,1
+    </select>
+
+    <select id="queryDataEnergyByGetTime" resultMap="tOnlineDataPowerMap">
+        select *  from t_online_data_energy p where
+        terminalId = #{terminalId}  and getTime = #{getTime}
+    </select>
+
+</mapper>

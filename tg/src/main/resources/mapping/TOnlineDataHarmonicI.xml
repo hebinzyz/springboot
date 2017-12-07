@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tg.dao.TOnlineDataHarmonicIDao" >
+
+    <resultMap id="tOnlineDataHarmonicIMap" type="com.tg.model.TOnlineDataHarmonicI">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <id column="terminalId" property="terminalId" jdbcType="VARCHAR"/>
+        <id column="getTime" property="getTime" jdbcType="BIGINT"/>
+        <id column="htype" property="htype" jdbcType="VARCHAR"/>
+        <id column="h3" property="h3" jdbcType="DECIMAL"/>
+        <id column="h5" property="h5" jdbcType="DECIMAL"/>
+        <id column="h7" property="h7" jdbcType="DECIMAL"/>
+        <id column="h9" property="h9" jdbcType="DECIMAL"/>
+        <id column="h11" property="h11" jdbcType="DECIMAL"/>
+        <id column="h13" property="h13" jdbcType="DECIMAL"/>
+        <id column="h15" property="h15" jdbcType="DECIMAL"/>
+        <id column="h17" property="h17" jdbcType="DECIMAL"/>
+        <id column="h19" property="h19" jdbcType="DECIMAL"/>
+        <id column="h21" property="h21" jdbcType="DECIMAL"/>
+        <id column="h23" property="h23" jdbcType="DECIMAL"/>
+        <id column="h25" property="h25" jdbcType="DECIMAL"/>
+        <id column="h27" property="h27" jdbcType="DECIMAL"/>
+        <id column="h29" property="h29" jdbcType="DECIMAL"/>
+        <id column="h31" property="h31" jdbcType="DECIMAL"/>
+        <id column="hall" property="hall" jdbcType="DECIMAL"/>
+        <id column="baseI" property="baseI" jdbcType="DECIMAL"/>
+    </resultMap>
+
+    <insert id="addTOnlineDataHarmonicI" parameterType="com.tg.model.TOnlineDataHarmonicI"
+            useGeneratedKeys="true" keyProperty="id">
+        insert ignore  into t_online_data_harmonic_i(terminalId,getTime,htype,h3,h5,h7,h9,h11,h13,h15,h17,h19,h21,h23,h25,h27,h29,h31,hall,baseI)
+        values(#{terminalId},#{getTime},#{htype},#{h3},#{h5},#{h7},#{h9},#{h11},#{h13},#{h15},#{h17},
+        #{h19},#{h21},#{h23},#{h25},#{h27},#{h29},#{h31},#{hall},#{baseI})
+    </insert>
+
+    <insert id="batchInsert" parameterType="java.util.List" >
+        <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER">
+            select last_insert_id()
+        </selectKey>
+        insert ignore into ${tableName}(terminalId,getTime,htype,h3,h5,h7,h9,h11,h13,h15,h17,h19,h21,h23,h25,h27,h29,h31,hall,baseI)
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.terminalId},#{item.getTime},#{item.htype},#{item.h3},#{item.h5},#{item.h7},#{item.h9},#{item.h11},#{item.h13},#{item.h15},#{item.h17},
+            #{item.h19},#{item.h21},#{item.h23},#{item.h25},#{item.h27},#{item.h29},#{item.h31},#{item.hall},#{item.baseI})
+        </foreach>
+    </insert>
+
+</mapper>

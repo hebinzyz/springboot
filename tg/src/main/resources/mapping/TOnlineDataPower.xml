@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tg.dao.TOnlineDataPowerDao" >
+
+    <resultMap id="tOnlineDataPowerMap" type="com.tg.model.TOnlineDataPower">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="terminalId" property="terminalId" jdbcType="VARCHAR"/>
+        <result column="getTime" property="getTime" jdbcType="BIGINT"/>
+        <result column="pa" property="pa" jdbcType="DECIMAL"/>
+        <result column="pb" property="pb" jdbcType="DECIMAL"/>
+        <result column="pc" property="pc" jdbcType="DECIMAL"/>
+        <result column="p" property="p" jdbcType="DECIMAL"/>
+        <result column="qa" property="qa" jdbcType="DECIMAL"/>
+        <result column="qb" property="qb" jdbcType="DECIMAL"/>
+        <result column="qc" property="qc" jdbcType="DECIMAL"/>
+        <result column="q" property="q" jdbcType="DECIMAL"/>
+        <result column="pfa" property="pfa" jdbcType="DECIMAL"/>
+        <result column="pfb" property="pfb" jdbcType="DECIMAL"/>
+        <result column="pfc" property="pfc" jdbcType="DECIMAL"/>
+        <result column="ia" property="ia" jdbcType="DECIMAL"/>
+        <result column="ib" property="ib" jdbcType="DECIMAL"/>
+        <result column="ic" property="ic" jdbcType="DECIMAL"/>
+        <result column="iz" property="iz" jdbcType="DECIMAL"/>
+        <result column="ua" property="ua" jdbcType="DECIMAL"/>
+        <result column="ub" property="ub" jdbcType="DECIMAL"/>
+        <result column="uc" property="uc" jdbcType="DECIMAL"/>
+        <result column="uab" property="uab" jdbcType="DECIMAL"/>
+        <result column="ubc" property="ubc" jdbcType="DECIMAL"/>
+        <result column="uca" property="uca" jdbcType="DECIMAL"/>
+        <result column="dp" property="dp" jdbcType="DECIMAL"/>
+        <result column="pv" property="pv" jdbcType="DECIMAL"/>
+    </resultMap>
+
+    <insert id="addTOnlineDataPower" parameterType="com.tg.model.TOnlineDataPower"
+            useGeneratedKeys="true" keyProperty="id">
+         insert ignore into t_online_data_power(terminalId,getTime,pa,pb,pc,p,qa,qb,qc,q,pfa,pfb,pfc,pf,ia,ib,ic,iz,ua,ub,uc,uab,ubc,uca,dp,pv)
+        values(#{terminalId},#{getTime},#{pa},#{pb},#{pc},#{p},#{qa},#{qb},#{qc},#{q},#{pfa},
+        #{pfb},#{pfc},#{pf},#{ia},#{ib},#{ic},#{iz},#{ua},#{ub},#{uc},#{uab},#{ubc},#{uca},#{dp},#{pv})
+    </insert>
+
+    <insert id="batchInsert" parameterType="java.util.List">
+        <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER">
+            select last_insert_id()
+        </selectKey>
+        insert ignore into ${tableName}(terminalId,getTime,pa,pb,pc,p,qa,qb,qc,q,pfa,pfb,pfc,pf,ia,ib,ic,iz,ua,ub,uc,uab,ubc,uca,dp,pv)
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.terminalId},#{item.getTime},#{item.pa},#{item.pb},#{item.pc},#{item.p},#{item.qa},#{item.qb},#{item.qc},#{item.q},#{item.pfa},
+            #{item.pfb},#{item.pfc},#{item.pf},#{item.ia},#{item.ib},#{item.ic},#{item.iz},#{item.ua},#{item.ub},#{item.uc},#{item.uab},#{item.ubc},#{item.uca},#{item.dp},#{item.pv})
+        </foreach>
+    </insert>
+    
+    <select id="queryDataPower" resultMap="tOnlineDataPowerMap">
+        select *  from t_online_data_power p where
+        terminalId in
+        <foreach  item="item" collection="list" index="index"  open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        and getTime =#{getTime}
+    </select>
+
+</mapper>

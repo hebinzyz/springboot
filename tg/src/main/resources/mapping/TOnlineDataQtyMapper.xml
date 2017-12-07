@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tg.dao.TOnlineDataQtyDao" >
+    <resultMap id="tOnlineDataQtyMap" type="com.tg.model.TOnlineDataQty">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <id column="terminalId" property="terminalId" jdbcType="VARCHAR"/>
+        <id column="getTime" property="getTime" jdbcType="BIGINT"/>
+        <id column="uaw" property="uaw" jdbcType="VARCHAR"/>
+        <id column="ubw" property="ubw" jdbcType="DECIMAL"/>
+        <id column="ucw" property="ucw" jdbcType="DECIMAL"/>
+        <id column="uabw" property="uabw" jdbcType="DECIMAL"/>
+        <id column="ubcw" property="ubcw" jdbcType="DECIMAL"/>
+        <id column="ucaw" property="ucaw" jdbcType="DECIMAL"/>
+        <id column="fw" property="fw" jdbcType="DECIMAL"/>
+        <id column="f" property="f" jdbcType="DECIMAL"/>
+        <id column="inbalance" property="inbalance" jdbcType="DECIMAL"/>
+        <id column="unbalance" property="unbalance" jdbcType="DECIMAL"/>
+        <id column="t" property="t" jdbcType="DECIMAL"/>
+        <id column="t2" property="t2" jdbcType="DECIMAL"/>
+        <id column="t3" property="t3" jdbcType="DECIMAL"/>
+        <id column="t4" property="t4" jdbcType="DECIMAL"/>
+        <id column="t5" property="t5" jdbcType="DECIMAL"/>
+        <id column="t6" property="t6" jdbcType="DECIMAL"/>
+        <id column="t7" property="t7" jdbcType="DECIMAL"/>
+        <id column="t8" property="t8" jdbcType="DECIMAL"/>
+    </resultMap>
+
+    <insert id="addTOnlineDataQty" parameterType="com.tg.model.TOnlineDataQty"
+            useGeneratedKeys="true" keyProperty="id">
+        insert ignore into t_online_data_qty(terminalId,getTime,uaw,ubw,ucw,uabw,ubcw,ucaw,fw,f,inbalance,unbalance,t,t2,t3,t4,t5,t6,t7,t8)
+        values(#{terminalId},#{getTime},#{uaw},#{ubw},#{ucw},#{uabw},#{ubcw},#{ucaw},#{fw},#{f},#{inbalance},#{unbalance},#{t},
+        #{t2},#{t3},#{t4},#{t5},#{t6},#{t7},#{t8})
+    </insert>
+
+    <insert id="batchInsert" parameterType="java.util.List" >
+        <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER">
+            select last_insert_id()
+        </selectKey>
+        insert ignore into ${tableName}(terminalId,getTime,uaw,ubw,ucw,uabw,ubcw,ucaw,fw,f,inbalance,unbalance,t,t2,t3,t4,t5,t6,t7,t8)
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.terminalId},#{item.getTime},#{item.uaw},#{item.ubw},#{item.ucw},#{item.uabw},#{item.ubcw},#{item.ucaw},#{item.fw},#{item.f},#{item.inbalance},#{item.unbalance},#{item.t},
+            #{item.t2},#{item.t3},#{item.t4},#{item.t5},#{item.t6},#{item.t7},#{item.t8})
+        </foreach>
+    </insert>
+</mapper>

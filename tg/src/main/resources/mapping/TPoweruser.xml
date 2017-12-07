@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tg.dao.TPoweruerDao" >
+
+    <resultMap id="map" type="com.tg.model.TPoweruser">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="orgId" property="orgId" jdbcType="BIGINT"/>
+        <result column="logo" property="logo" jdbcType="VARCHAR"/>
+        <result column="expiredDate" property="expiredDate" jdbcType="VARCHAR"/>
+        <result column="rank" property="rank" jdbcType="INTEGER" />
+        <result column="industry1" property="industry1" jdbcType="BIGINT" />
+        <result column="industry2" property="industry2" jdbcType="BIGINT" />
+        <result column="industry3" property="industry3" jdbcType="BIGINT" />
+        <result column="applyLoad" property="applyLoad" jdbcType="VARCHAR"/>
+        <result column="jcrl" property="jcrl" jdbcType="BIGINT"/>
+        <result column="zbsl" property="zbsl" jdbcType="INTEGER" />
+        <result column="voltageClass" property="voltageClass" jdbcType="VARCHAR"/>
+        <result column="jffs" property="jffs" jdbcType="INTEGER" />
+        <result column="fgpFlag" property="fgpFlag" jdbcType="INTEGER" />
+        <result column="powerSupply" property="powerSupply" jdbcType="INTEGER" />
+        <result column="style" property="style" jdbcType="INTEGER" />
+        <result column="cno" property="cno" jdbcType="VARCHAR"/>
+        <result column="jbdj" property="jbdj" jdbcType="VARCHAR"/>
+        <result column="xldj" property="xldj" jdbcType="VARCHAR"/>
+        <result column="rldj" property="rldj" jdbcType="VARCHAR"/>
+        <result column="loginTimes" property="loginTimes" jdbcType="BIGINT"/>
+        <result column="customState" property="customState" jdbcType="INTEGER" />
+        <result column="state" property="state" jdbcType="INTEGER" />
+        <result column="normalLoad" property="normalLoad" jdbcType="DECIMAL"/>
+        <result column="halfLoadStart" property="halfLoadStart" jdbcType="DECIMAL"/>
+        <result column="stopLoad" property="stopLoad" jdbcType="DECIMAL"/>
+        <result column="parkId" property="parkId" jdbcType="BIGINT"/>
+        <result column="headCount" property="headCount" jdbcType="INTEGER" />
+        <result column="grossArea" property="grossArea" jdbcType="DOUBLE" />
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, orgId, logo, expiredDate, rank, industry1, industry2,industry3,applyLoad,jcrl,zbsl,voltageClass,jffs,fgpFlag,
+        powerSupply,style,cno,jbdj,xldj,rldj,loginTimes,customState,state,normalLoad,halfLoadStart,halfLoadEnd,stopLoad,parkId,headCount,grossArea
+    </sql>
+
+    <!-- 查询所有 -->
+    <select id="getTPoweruser" resultMap="map">
+        SELECT <include refid="Base_Column_List" />
+        from t_poweruser
+        <if test="orgId != null">
+            where orgId = #{orgId}
+        </if>
+    </select>
+</mapper>
